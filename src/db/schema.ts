@@ -1,4 +1,5 @@
-import { pgTable, text, integer, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean, primaryKey } from "drizzle-orm/pg-core";
+import { timestamps } from "./columns.helpers";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -50,3 +51,33 @@ export const verification = pgTable("verification", {
   createdAt: timestamp("created_at"),
   updatedAt: timestamp("updated_at"),
 });
+
+export const classes = pgTable("classes", {
+  id: text("id").primaryKey(),
+  subjectName: text("subject_name").notNull(),
+  code: text("code").notNull(),
+  classTeacherId: text("class_teacher_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  ...timestamps,
+});
+
+export const material = pgTable("material", {
+  id: text("id").primaryKey(),
+  title: text("title").notNull(),
+  content: text("content"),
+  classId: text("class_id")
+    .notNull()
+    .references(() => classes.id, { onDelete: "cascade" }),
+  ...timestamps,
+});
+
+export const enrollments = pgTable(
+  "enrollments",
+  {
+    userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
+    classId: text("class_id").references(() => classes.id, { onDelete: "cascade" }),
+    isPending: boolean("is_pending").notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.userId, table.classId] })]
+);
