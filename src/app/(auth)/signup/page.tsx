@@ -8,8 +8,8 @@ export const metadata: Metadata = {
 
 export default function SignUpPage() {
   return (
-    <div className="flex min-h-screen w-full flex-col items-center justify-center p-10">
-      <div className="flex items-center w-full flex-col rounded-2xl border border-foreground/10 px-8 py-5 md:w-96">
+    <div className="py-10 flex w-full flex-col items-center justify-center">
+      <div className="flex flex-col w-full items-center rounded-2xl border px-8 py-5 max-w-lg">
         <h1 className="text-2xl font-semibold mb-1">Sign Up</h1>
         <p>Sign up for a Courseflow account</p>
         <SignUpForm />

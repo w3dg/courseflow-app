@@ -52,22 +52,22 @@ export default function AppNavbar() {
                   <Menu className="w-6 h-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent>
-                <SheetHeader>
-                  <SheetTitle>Courseflow</SheetTitle>
+              <SheetContent side={"left"}>
+                <SheetHeader className="text-left">
+                  <SheetTitle className="text-xl">Courseflow</SheetTitle>
                   <SheetDescription>Where learning happens</SheetDescription>
                   {session && (
                     <>
-                      <div className="flex items-center text-lg justify-center w-full gap-1">
-                        <CircleUser className="w-4 h-4" />
-                        {session.user.name}
-                      </div>
-                      <div className="flex flex-col gap-4 mb-8">
+                      <div className="flex flex-col gap-4 pb-8 pt-4">
                         {menuItems.map((item) => (
-                          <Link href={item.href} key={item.href} className="mx-4 block md:hidden">
+                          <Link href={item.href} key={item.href} className="block md:hidden">
                             {item.label}
                           </Link>
                         ))}
+                      </div>
+                      <div className="flex items-center text-accent-foreground w-full justify-between">
+                        <p>{session.user.name}</p>
+                        <CircleUser className="w-4 h-4" />
                       </div>
                       <SignOutButton></SignOutButton>
                     </>
