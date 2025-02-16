@@ -1,20 +1,14 @@
-// import { auth } from "@/lib/auth";
-// import { headers } from "next/headers";
-// import { redirect } from "next/navigation";
+import { requireAuth } from "@/app/utils/require-auth";
 import SignOutButton from "../../(auth)/components/signout-button";
 
-function Dashboard() {
-  // async function Dashboard() {
-  // const session = await auth.api.getSession({
-  //   headers: await headers(),
-  // });
-  // if (!session) {
-  //   redirect("/signup");
-  // }
+async function Dashboard() {
+  const session = await requireAuth();
+
   return (
     <div>
-      {/* <h1>Welcome {session.user.name}</h1> */}
-      <h1>Welcome to Dashboard</h1>
+      <h1 className="text-2xl">
+        Welcome to Dashboard, <span className="font-bold">{session?.user.name}</span>
+      </h1>
       <SignOutButton />
     </div>
   );
