@@ -1,4 +1,8 @@
 import { pgTable, text, timestamp, boolean, primaryKey } from "drizzle-orm/pg-core";
+import { InferSelectModel, relations } from "drizzle-orm";
+import { createInsertSchema } from "drizzle-zod";
+import { v4 as uuidv4 } from "uuid";
+
 import { timestamps } from "./columns.helpers";
 
 export const user = pgTable("user", {
@@ -11,6 +15,11 @@ export const user = pgTable("user", {
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
 });
+
+export const usersRelations = relations(user, ({ many }) => ({
+  classes: many(classes),
+  enrolledClasses: many(enrollments),
+}));
 
 export const session = pgTable("session", {
   id: text("id").primaryKey(),
@@ -53,7 +62,9 @@ export const verification = pgTable("verification", {
 });
 
 export const classes = pgTable("classes", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => uuidv4()),
   subjectName: text("subject_name").notNull(),
   code: text("code").notNull(),
   classTeacherId: text("class_teacher_id")
@@ -62,8 +73,31 @@ export const classes = pgTable("classes", {
   ...timestamps,
 });
 
+export type Classes = InferSelectModel<typeof classes>;
+
+export const classesRelations = relations(classes, ({ one, many }) => ({
+  classTeacher: one(user, {
+    fields: [classes.classTeacherId],
+    references: [user.id],
+  }),
+  enrollments: many(enrollments),
+  materials: many(material),
+}));
+
+export const createClassSchema = createInsertSchema(classes).pick({
+  subjectName: true,
+  code: true,
+  classTeacherId: true,
+});
+
+export type ClassesWithTeacher = InferSelectModel<typeof classes> & {
+  classTeacher: InferSelectModel<typeof user>;
+};
+
 export const material = pgTable("material", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => uuidv4()),
   title: text("title").notNull(),
   content: text("content"),
   classId: text("class_id")
@@ -72,12 +106,40 @@ export const material = pgTable("material", {
   ...timestamps,
 });
 
+export const materialRelations = relations(material, ({ one }) => ({
+  classes: one(classes, {
+    fields: [material.classId],
+    references: [classes.id],
+  }),
+}));
+
 export const enrollments = pgTable(
   "enrollments",
   {
-    userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
-    classId: text("class_id").references(() => classes.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    classId: text("class_id")
+      .notNull()
+      .references(() => classes.id, { onDelete: "cascade" }),
     isPending: boolean("is_pending").notNull(),
   },
   (table) => [primaryKey({ columns: [table.userId, table.classId] })]
 );
+
+export const enrollmentRelations = relations(enrollments, ({ one }) => ({
+  classes: one(classes, {
+    fields: [enrollments.classId],
+    references: [classes.id],
+  }),
+  user: one(user, {
+    fields: [enrollments.userId],
+    references: [user.id],
+  }),
+}));
+
+export const joinClassSchema = createInsertSchema(enrollments);
+
+export type EnrolledClasses = InferSelectModel<typeof enrollments> & {
+  classes: InferSelectModel<typeof classes>;
+};

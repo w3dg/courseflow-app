@@ -24,8 +24,8 @@ CREATE TABLE "classes" (
 );
 --> statement-breakpoint
 CREATE TABLE "enrollments" (
-	"user_id" text,
-	"class_id" text,
+	"user_id" text NOT NULL,
+	"class_id" text NOT NULL,
 	"is_pending" boolean NOT NULL,
 	CONSTRAINT "enrollments_user_id_class_id_pk" PRIMARY KEY("user_id","class_id")
 );

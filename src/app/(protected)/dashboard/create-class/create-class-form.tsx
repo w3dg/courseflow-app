@@ -13,37 +13,47 @@ import { useRouter } from "next/navigation";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 
-const formSchema = z.object({
-  email: z.string().email("Must be a valid email"),
-  password: z.string().min(8),
-});
+import { createClassSchema } from "@/db/schema";
+import { createClass } from "@/app/actions/create-class";
 
-export default function SignInForm() {
+const createClassSchemaWithoutTeacherId = createClassSchema.omit({ classTeacherId: true });
+
+export default function CreateClassForm({ teacherId }: { teacherId: string }) {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const { data: session } = authClient.useSession();
   const router = useRouter();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+
+  const form = useForm<z.infer<typeof createClassSchemaWithoutTeacherId>>({
+    resolver: zodResolver(createClassSchemaWithoutTeacherId),
     defaultValues: {
-      email: "",
-      password: "",
+      subjectName: "",
+      code: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  const createClassWithTeacherId = createClass.bind(null, teacherId);
+
+  async function onSubmit(values: z.infer<typeof createClassSchemaWithoutTeacherId>) {
     setIsLoading(true);
-    const { data, error } = await authClient.signIn.email(values);
+
+    const { error } = await createClassWithTeacherId(values);
+
     if (error) {
       setIsLoading(false);
-      setErrorMessage(error?.message || "An error occurred while signing in");
+      setErrorMessage(error);
     } else {
       router.push("/dashboard");
     }
   }
 
+  if (!session) {
+    return null;
+  }
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 my-4 grid w-full">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         {errorMessage && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
@@ -53,12 +63,12 @@ export default function SignInForm() {
         )}
         <FormField
           control={form.control}
-          name="email"
+          name="subjectName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Subject Name</FormLabel>
               <FormControl>
-                <Input placeholder="einstein@uni.edu" {...field} />
+                <Input placeholder="Math 201" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -66,20 +76,18 @@ export default function SignInForm() {
         />
         <FormField
           control={form.control}
-          name="password"
+          name="code"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Subject Code</FormLabel>
               <FormControl>
-                <Input type="password" {...field} />
+                <Input placeholder="MTH-201" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={isLoading}>
-          Submit
-        </Button>
+        <Button type="submit">Submit</Button>
       </form>
     </Form>
   );
