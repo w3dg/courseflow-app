@@ -7,15 +7,29 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Skeleton } from "@/components/ui/skeleton";
 import { db } from "@/db";
 import Link from "next/link";
+import Image from "next/image";
 import { Suspense } from "react";
+
+import emptyClass from "./empty-class.png";
 
 function LoadingDotsSkeleton() {
   return (
-    <div className="w-full p-4">
+    <div className="w-full p-4 col-span-full">
       <div className="flex gap-1 items-center justify-center">
         <Skeleton className="h-8 w-8 rounded-full" />
         <Skeleton className="h-8 w-8 rounded-full" />
         <Skeleton className="h-8 w-8 rounded-full" />
+      </div>
+    </div>
+  );
+}
+
+function EmptyClasses() {
+  return (
+    <div className="w-full p-4 col-span-full opacity-40">
+      <div className="flex flex-col gap-1 items-center justify-center">
+        <Image src={emptyClass} alt="Empty Class" width={"400"} height={"400"} />
+        <p>No classes yet</p>
       </div>
     </div>
   );
@@ -27,19 +41,23 @@ async function TeachersClasses({ userId }: { userId: string }) {
   });
   return (
     <>
-      {resultClasses.map((cls) => (
-        <Card key={cls.id}>
-          <CardHeader>
-            <CardTitle>{cls.subjectName}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <CardDescription>{cls.code}</CardDescription>
-          </CardContent>
-          <CardFooter className="grid">
-            <Button variant={"outline"}>View class</Button>
-          </CardFooter>
-        </Card>
-      ))}
+      {resultClasses.length === 0 ? (
+        <EmptyClasses />
+      ) : (
+        resultClasses.map((cls) => (
+          <Card key={cls.id}>
+            <CardHeader>
+              <CardTitle>{cls.subjectName}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>{cls.code}</CardDescription>
+            </CardContent>
+            <CardFooter className="grid">
+              <Button variant={"outline"}>View class</Button>
+            </CardFooter>
+          </Card>
+        ))
+      )}
     </>
   );
 }
@@ -54,19 +72,23 @@ async function StudentEnrolledClasses({ userId }: { userId: string }) {
 
   return (
     <>
-      {resultClasses.map((cls) => (
-        <Card key={cls.classId}>
-          <CardHeader>
-            <CardTitle>{cls.classes.subjectName}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <CardDescription>{cls.classes.code}</CardDescription>
-          </CardContent>
-          <CardFooter className="grid">
-            <Button variant={"outline"}>View class</Button>
-          </CardFooter>
-        </Card>
-      ))}
+      {resultClasses.length === 0 ? (
+        <EmptyClasses />
+      ) : (
+        resultClasses.map((cls) => (
+          <Card key={cls.classId}>
+            <CardHeader>
+              <CardTitle>{cls.classes.subjectName}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>{cls.classes.code}</CardDescription>
+            </CardContent>
+            <CardFooter className="grid">
+              <Button variant={"outline"}>View class</Button>
+            </CardFooter>
+          </Card>
+        ))
+      )}
     </>
   );
 }
@@ -93,17 +115,15 @@ async function Dashboard() {
       </div>
 
       {/* List classes */}
-      <Suspense fallback={<LoadingDotsSkeleton />}>
-        {session.user.role === "teacher" ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
+        <Suspense fallback={<LoadingDotsSkeleton />}>
+          {session.user.role === "teacher" ? (
             <TeachersClasses userId={session.user.id} />
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
+          ) : (
             <StudentEnrolledClasses userId={session.user.id} />
-          </div>
-        )}
-      </Suspense>
+          )}
+        </Suspense>
+      </div>
     </div>
   );
 }
