@@ -53,7 +53,9 @@ async function TeachersClasses({ userId }: { userId: string }) {
               <CardDescription>{cls.code}</CardDescription>
             </CardContent>
             <CardFooter className="grid">
-              <Button variant={"outline"}>View class</Button>
+              <Link href={`/dashboard/view-class/${cls.id}`}>
+                <Button variant={"outline"}>View class</Button>
+              </Link>
             </CardFooter>
           </Card>
         ))
@@ -84,7 +86,9 @@ async function StudentEnrolledClasses({ userId }: { userId: string }) {
               <CardDescription>{cls.classes.code}</CardDescription>
             </CardContent>
             <CardFooter className="grid">
-              <Button variant={"outline"}>View class</Button>
+              <Link href={`/dashboard/view-class/${cls.classId}`}>
+                <Button variant={"outline"}>View class</Button>
+              </Link>
             </CardFooter>
           </Card>
         ))
