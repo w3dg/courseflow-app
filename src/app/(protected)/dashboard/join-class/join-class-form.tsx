@@ -1,21 +1,19 @@
 "use client";
 
+import { createEnrollment } from "@/app/actions/join-class";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ClassesWithTeacher, joinClassSchema } from "@/db/schema";
+import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AlertCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth-client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, Link } from "lucide-react";
-
-import { ClassesWithTeacher, joinClassSchema } from "@/db/schema";
-import { createEnrollment } from "@/app/actions/join-class";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 const joinClassSchemaWithoutStudentId = joinClassSchema.omit({ userId: true });
 
 export default function JoinClassForm({
@@ -100,7 +98,9 @@ export default function JoinClassForm({
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" disabled={isLoading} aria-disabled={isLoading}>
+          Submit
+        </Button>
       </form>
     </Form>
   );

@@ -1,15 +1,13 @@
-import { eq } from "drizzle-orm";
-import { Classes, classes, EnrolledClasses, enrollments } from "@/db/schema";
 import { requireAuth } from "@/app/utils/require-auth";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { db } from "@/db";
-import Link from "next/link";
+import { Classes, classes, EnrolledClasses, enrollments } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import Image from "next/image";
+import Link from "next/link";
 import { Suspense } from "react";
-
 import emptyClass from "./empty-class.png";
 
 function LoadingDotsSkeleton() {

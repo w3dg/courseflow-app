@@ -1,7 +1,7 @@
-import Link from "next/link";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { requireNoAuth } from "@/app/utils/require-auth";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import Link from "next/link";
 
 import studyPng from "./study.png";
 

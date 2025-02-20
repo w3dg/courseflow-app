@@ -1,6 +1,5 @@
-import { Badge } from "@/components/ui/badge";
 import { requireAuth } from "@/app/utils/require-auth";
-import React from "react";
+import { Badge } from "@/components/ui/badge";
 
 async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await requireAuth();

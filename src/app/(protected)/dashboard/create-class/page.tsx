@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { requireAuth } from "@/app/utils/require-auth";
-import CreateClassForm from "./create-class-form";
-import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import CreateClassForm from "./create-class-form";
 
 async function CreateClassPage() {
   const session = await requireAuth();
