@@ -1,5 +1,5 @@
 "use client";
-import { deleteClass } from "@/app/actions/delete-class";
+import { deleteMaterial } from "@/app/actions/delete-material";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -8,25 +8,25 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-function DeleteClassForm({ id }: { id: string }) {
+export default function DeleteMaterialForm({ materialId, classId }: { materialId: string; classId: string }) {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
-  const deleteClassWithId = deleteClass.bind(null, id);
+  const deleteMaterialWithId = deleteMaterial.bind(null, materialId, classId);
 
   const form = useForm({});
 
   async function onSubmit() {
     setIsLoading(true);
 
-    const { error } = await deleteClassWithId();
+    const { error } = await deleteMaterialWithId();
 
     if (error) {
       setIsLoading(false);
       setErrorMessage(error);
     } else {
-      router.push("/dashboard");
+      router.push(`/dashboard/manage/${classId}/materials`);
     }
   }
 
@@ -36,7 +36,7 @@ function DeleteClassForm({ id }: { id: string }) {
         {errorMessage && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Couldn't delete class</AlertTitle>
+            <AlertTitle>Couldn't delete material</AlertTitle>
             <AlertDescription>{errorMessage}</AlertDescription>
           </Alert>
         )}
@@ -47,11 +47,9 @@ function DeleteClassForm({ id }: { id: string }) {
           disabled={isLoading}
           aria-disabled={isLoading}
         >
-          <Trash2Icon className="w-4 h-4" /> Yes, delete class
+          <Trash2Icon className="w-4 h-4" /> Yes, delete material
         </Button>
       </form>
     </Form>
   );
 }
-
-export default DeleteClassForm;

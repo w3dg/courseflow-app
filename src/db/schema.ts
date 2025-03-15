@@ -1,6 +1,6 @@
 import { pgTable, text, timestamp, boolean, primaryKey } from "drizzle-orm/pg-core";
 import { InferSelectModel, relations } from "drizzle-orm";
-import { createInsertSchema } from "drizzle-zod";
+import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { v4 as uuidv4 } from "uuid";
 
 import { timestamps } from "./columns.helpers";
@@ -104,6 +104,19 @@ export const material = pgTable("material", {
     .notNull()
     .references(() => classes.id, { onDelete: "cascade" }),
   ...timestamps,
+});
+
+export type Material = InferSelectModel<typeof material>;
+
+export const CreateMaterialSchema = createInsertSchema(material).pick({
+  title: true,
+  content: true,
+  classId: true,
+});
+
+export const EditMaterialSchema = createUpdateSchema(material).pick({
+  title: true,
+  content: true,
 });
 
 export const materialRelations = relations(material, ({ one }) => ({

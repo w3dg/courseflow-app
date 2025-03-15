@@ -12,9 +12,9 @@ import { db } from "@/db";
 import { Trash2Icon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import DeleteForm from "./delete-form";
+import DeleteClassForm from "./delete-form";
 
-async function ViewClassPage({ params }: { params: Promise<{ classId: string }> }) {
+async function ManageClassPage({ params }: { params: Promise<{ classId: string }> }) {
   const classId = (await params).classId;
 
   const session = await requireAuth();
@@ -42,7 +42,7 @@ async function ViewClassPage({ params }: { params: Promise<{ classId: string }> 
   }
 
   return (
-    <section className="flex flex-col gap-1 mt-8">
+    <section className="flex flex-col gap-8 mt-8">
       <div className="flex flex-col gap-4 items-start md:flex-row md:justify-between">
         <div>
           <h1 className="font-bold text-xl md:text-2xl">Manage Class</h1>
@@ -51,9 +51,15 @@ async function ViewClassPage({ params }: { params: Promise<{ classId: string }> 
           </h2>
         </div>
         <div className="flex gap-2 items-center">
+          <Link href={`/dashboard/view-class/${classId}`}>
+            <Button variant={"outline"}>Back to Class</Button>
+          </Link>
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant={"destructive"} className="flex gap-1 items-center">
+              <Button
+                variant={"outline"}
+                className="flex gap-1 items-center bg-red-200 text-red-700 hover:bg-red-300 hover:text-red-700"
+              >
                 <Trash2Icon className="w-4 h-4" /> Delete Class
               </Button>
             </DialogTrigger>
@@ -64,17 +70,16 @@ async function ViewClassPage({ params }: { params: Promise<{ classId: string }> 
                   This action cannot be undone. This will permanently delete the class and all associated materials.
                 </DialogDescription>
               </DialogHeader>
-              <DeleteForm id={classId} />
+              <DeleteClassForm id={classId} />
             </DialogContent>
           </Dialog>
-
-          <Link href={`/dashboard/view-class/${classId}`}>
-            <Button variant={"outline"}>Back to Class</Button>
-          </Link>
         </div>
       </div>
+      <Link href={`/dashboard/manage/${classId}/materials`}>
+        <Button variant={"link"}>Manage Materials</Button>
+      </Link>
     </section>
   );
 }
 
-export default ViewClassPage;
+export default ManageClassPage;
