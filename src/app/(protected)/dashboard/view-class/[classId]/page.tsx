@@ -69,21 +69,10 @@ async function ViewClassPage({ params }: { params: Promise<{ classId: string }> 
               <CardTitle>{material.title}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground text-ellipsis line-clamp-4">
-                {material.content}
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam non quia id tenetur error, officia
-                odio vero. Alias, esse natus. Enim sequi, vel beatae nulla quisquam, consequuntur ex quasi quos a
-                suscipit, dolorem tenetur adipisci similique. Quos consequatur autem explicabo! Hic debitis pariatur
-                vitae fugiat sed sunt sequi expedita architecto! Lorem ipsum dolor sit amet consectetur adipisicing
-                elit. Laboriosam non quia id tenetur error, officia odio vero. Alias, esse natus. Enim sequi, vel beatae
-                nulla quisquam, consequuntur ex quasi quos a suscipit, dolorem tenetur adipisci similique. Quos
-                consequatur autem explicabo! Hic debitis pariatur vitae fugiat sed sunt sequi expedita architecto! Lorem
-                ipsum dolor sit amet consectetur adipisicing elit.
-              </p>
+              <p className="text-muted-foreground text-ellipsis line-clamp-4">{material.content}</p>
             </CardContent>
             <CardFooter>
-              {/* <Link href={`/dashboard/view-class/${classId}/materials/${material.id}`}> */}
-              <Link href={`#`}>
+              <Link href={`/dashboard/view-class/${classId}/${material.id}`}>
                 <Button variant="secondary">View material</Button>
               </Link>
             </CardFooter>
