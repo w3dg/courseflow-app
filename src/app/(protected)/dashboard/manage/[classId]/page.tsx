@@ -41,6 +41,13 @@ async function ManageClassPage({ params }: { params: Promise<{ classId: string }
     );
   }
 
+  const studentsOfClass = await db.query.enrollments.findMany({
+    where: (enrollments, { eq }) => eq(enrollments.classId, classId),
+    with: {
+      user: true,
+    },
+  });
+
   return (
     <section className="flex flex-col gap-8 mt-8">
       <div className="flex flex-col gap-4 items-start md:flex-row md:justify-between">
@@ -76,8 +83,20 @@ async function ManageClassPage({ params }: { params: Promise<{ classId: string }
         </div>
       </div>
       <Link href={`/dashboard/manage/${classId}/materials`}>
-        <Button variant={"link"}>Manage Materials</Button>
+        <Button variant={"outline"}>Manage Materials for {classInfo.subjectName}</Button>
       </Link>
+      <div>
+        <h2 className="font-bold text-base">Participants in this class</h2>
+        <div className="flex flex-col gap-2 mt-4">
+          <ul className="flex flex-col gap-2">
+            {studentsOfClass.map((student) => (
+              <li key={student.userId} className="">
+                {student.user.name} <span className="text-muted-foreground">({student.user.email})</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </section>
   );
 }

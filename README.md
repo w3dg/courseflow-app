@@ -4,19 +4,19 @@
 
 - Accounts
 
-  - Teacher
-  - Student
+  - [x] Teacher
+  - [x] Student
 
 - Create Classrooms
 
-  - Teacher has to be mandatory
-  - Students can join the classrooms through a code
+  - [x] Teacher has to be mandatory
+  - [x] Students can join the classrooms through a code
     - Students can be sent invitations automatically when they are added to a class
-  - Students can see only the classrooms they've joined
+  - [x] Students can see only the classrooms they've joined
 
 - As the teacher
 
-  - Materials
+  - [x] Materials
   - Materials in markdown notes ( Rich editor )
     - later we can feed an LLM and ask to generate summaries and practice questions?
   - Announcements in classroom
@@ -25,8 +25,8 @@
   - Assign work to class and grade it
 
 - As the student
-  - View classes they've joined
-  - join a classroom with a code
+  - [x] View classes they've joined
+  - [x] join a classroom with a code
   - view invitations to classes
   - view assignments and grades
   - can use generated practice questions on materials
