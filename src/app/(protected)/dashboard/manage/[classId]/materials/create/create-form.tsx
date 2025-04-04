@@ -13,6 +13,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { createMaterial } from "@/app/actions/create-material";
+import { Textarea } from "@/components/ui/textarea";
 
 interface CreateMaterialProps {
   classInfo: Classes;
@@ -87,7 +88,7 @@ export default function CreateForm({ classInfo }: CreateMaterialProps) {
             <FormItem>
               <FormLabel>Content</FormLabel>
               <FormControl>
-                <Input placeholder="Content" {...field} />
+                <Textarea placeholder="Lecture Content" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

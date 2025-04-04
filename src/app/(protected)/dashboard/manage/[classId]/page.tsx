@@ -88,6 +88,14 @@ async function ManageClassPage({ params }: { params: Promise<{ classId: string }
       <div>
         <h2 className="font-bold text-base">Participants in this class</h2>
         <div className="flex flex-col gap-2 mt-4">
+          {studentsOfClass.length === 0 && (
+            <p className="text-muted-foreground">No students enrolled in this class yet.</p>
+          )}
+          {studentsOfClass.length > 0 && (
+            <p className="text-muted-foreground">
+              {studentsOfClass.length} student{studentsOfClass.length > 1 ? "s" : ""} enrolled in this class.
+            </p>
+          )}
           <ul className="flex flex-col gap-2">
             {studentsOfClass.map((student) => (
               <li key={student.userId} className="">
