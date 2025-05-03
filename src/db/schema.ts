@@ -16,6 +16,8 @@ export const user = pgTable("user", {
   updatedAt: timestamp("updated_at").notNull(),
 });
 
+export type User = InferSelectModel<typeof user>;
+
 export const usersRelations = relations(user, ({ many }) => ({
   classes: many(classes),
   enrolledClasses: many(enrollments),
