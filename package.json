@@ -10,7 +10,7 @@
     "db:push": "drizzle-kit push",
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "pnpm run db:auth-seed",
-    "db:auth-seed": "pnpm dlx @better-auth-kit/cli@latest seed"
+    "db:auth-seed": "pnpm dlx @better-auth-kit/cli@latest seed --run-all"
   },
   "dependencies": {
     "@ai-sdk/google": "^1.2.5",
